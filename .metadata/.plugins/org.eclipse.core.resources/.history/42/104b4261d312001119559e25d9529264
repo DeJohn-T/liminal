@@ -1,0 +1,27 @@
+import java.util.Scanner;
+
+
+public class CalculateInterest {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		
+		Scanner scanner = new Scanner(System.in);
+		
+		System.out.print("Please enter your account balance.");
+		double balance =scanner.nextDouble();
+		
+		
+		System.out.print("Please enter your annual percentage interest iate.");
+		double annualInterestRate =scanner.nextDouble();
+		
+		double interest = balance * (annualInterestRate / 1200);
+		
+		System.out.println("\n======== Monthly INterest Result======");
+		System.out.printf("Account Balance:      $%,.2f%n", balance);
+		System.out.printf("Annual Interest Rate:     $%.3f%%%n  ", annualInterestRate);
+		System.out.printf("Interest for Next Month:      $%,.2f%n", interest);
+		
+	}
+
+}

@@ -1,0 +1,38 @@
+/*
+ * DeJohn Thompson
+ * Vehicle Class Project
+ * Create vehicle object, and call distance. Clearly Labeled outputs.
+ * March 1st
+ */
+
+
+
+
+import java.util.Scanner;
+
+public class ThompsonVehicleClass { 
+
+    public static void main(String[] args) {
+
+        Scanner keyboard = new Scanner(System.in);
+
+        System.out.println("Enter the make of the vehicle:");
+        String make = keyboard.nextLine();
+
+        System.out.println("Enter the model of the vehicle:");
+        String model = keyboard.nextLine();
+
+        System.out.println("Enter the tank size in gallons:");
+        int tankSize = keyboard.nextInt();
+
+        Vehicle car = new Vehicle(make, model, tankSize);
+
+        System.out.println("\n--- Vehicle Information ---");
+        System.out.println("Make: " + car.getMake());
+        System.out.println("Model: " + car.getModel());
+        System.out.println("Tank Size: " + car.getTankSize() + " gallons");
+
+        System.out.println("\n--- Distance Information ---");
+        car.distance();
+    }
+}

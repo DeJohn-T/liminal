@@ -1,0 +1,43 @@
+/*
+ * DeJohn Thompson
+ * UPPER CASE PROJECT
+ * Read Contents of Profile 1 and storing results into second.
+ * March 1st
+ */
+
+
+
+
+import java.util.Scanner;
+import java.io.*;
+
+public class ThompsonUPPERCASE {   
+
+    public static void main(String[] args) throws IOException {
+
+        Scanner keyboard = new Scanner(System.in);
+
+        System.out.println("Enter the name of your first file (example: input.txt):");
+        String inputFile = keyboard.nextLine();
+
+        System.out.println("Enter the name of your second file (example: output.txt):");
+        String outputFile = keyboard.nextLine();
+
+        FileReader fr = new FileReader(inputFile);
+        BufferedReader br = new BufferedReader(fr);
+
+        FileWriter fw = new FileWriter(outputFile);
+        PrintWriter pw = new PrintWriter(fw);
+
+        String line;
+
+        while ((line = br.readLine()) != null) {
+            pw.println(line.toUpperCase());
+        }
+
+        br.close();
+        pw.close();
+
+        System.out.println("Your file has been copied in uppercase. Thank you.");
+    }
+}

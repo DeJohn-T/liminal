@@ -1,0 +1,65 @@
+import java.util.Scanner;
+
+public class ThompsonEmpSearch {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        String[] names = new String[10];
+        String[] ids = new String[10];
+        int count = 0;
+
+        // Input loop
+        System.out.println("Enter up to 10 employees. Type 'ZZZ' for the name to stop.");
+
+        while (count < 10) {
+            System.out.print("Enter employee name (or ZZZ to stop): ");
+            String name = scanner.nextLine();
+
+            if (name.equals("ZZZ")) {
+                break;
+            }
+
+            System.out.print("Enter employee ID (format: B1234): ");
+            String id = scanner.nextLine();
+
+            names[count] = name;
+            ids[count] = id;
+            count++;
+        }
+
+        // Display count and names
+        System.out.println("\n" + count + " employee(s) entered:");
+        for (int i = 0; i < count; i++) {
+            System.out.println(names[i]);
+        }
+
+        // Search loop
+        System.out.println("\nYou can now search by ID. Type 'ZZZ' to quit.");
+
+        while (true) {
+            System.out.print("Enter an employee ID to search (example: B1234): ");
+            String searchID = scanner.nextLine();
+
+            if (searchID.equals("ZZZ")) {
+                break;
+            }
+
+            // Sequential search
+            boolean found = false;
+            for (int i = 0; i < count; i++) {
+                if (ids[i].equals(searchID)) {
+                    System.out.println("Employee found: " + names[i]);
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found) {
+                System.out.println("Error: No employee found with ID " + searchID);
+            }
+        }
+
+        System.out.println("Goodbye!");
+        scanner.close();
+    }
+}

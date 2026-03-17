@@ -1,0 +1,81 @@
+Number Of Cars = 20
+Make: Kia
+Year: 2007
+Price: $4000
+
+Make: Honda
+Year: 2009
+Price: $10000
+
+Make: Toyota
+Year: 1999
+Price: $1800
+
+Make: Ford
+Year: 2016
+Price: $34300
+
+Make: Mazda
+Year: 1998
+Price: $21300
+
+Make: BMW
+Year: 2008
+Price: $32100
+
+Make: Volkswagen
+Year: 2009
+Price: $23200
+
+Make: Audi
+Year: 1994
+Price: $21200
+
+Make: Peugeot
+Year: 1992
+Price: $19200
+
+Make: Cadillac
+Year: 1989
+Price: $14500
+
+Make: Mini
+Year: 1965
+Price: $25400
+
+Make: Suzuki
+Year: 1981
+Price: $25700
+
+Make: Jaguar
+Year: 1988
+Price: $8200
+
+Make: Infiniti
+Year: 1966
+Price: $26200
+
+Make: Fiat
+Year: 2013
+Price: $26100
+
+Make: Chevrolet
+Year: 2015
+Price: $29700
+
+Make: Suzuki
+Year: 1999
+Price: $21400
+
+Make: Volvo
+Year: 2004
+Price: $9500
+
+Make: Lexus
+Year: 1989
+Price: $29000
+
+Make: Mitsubishi
+Year: 2006
+Price: $22300
+

@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DeJohn Thompson — Resume</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --ink: #0f0f0f;
+    --mid: #444;
+    --light: #888;
+    --rule: #d8d8d8;
+    --accent: #1a4fba;
+    --page-w: 780px;
+  }
+
+  body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background: #e8e6e1;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding: 32px 16px;
+  }
+
+  .page {
+    background: #fafaf8;
+    width: var(--page-w);
+    padding: 44px 52px 40px;
+    position: relative;
+    box-shadow: 0 4px 40px rgba(0,0,0,0.13);
+  }
+
+  /* Accent bar */
+  .page::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 5px;
+    height: 100%;
+    background: var(--accent);
+  }
+
+  /* HEADER */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding-bottom: 14px;
+    border-bottom: 1.5px solid var(--ink);
+    margin-bottom: 18px;
+  }
+
+  .name {
+    font-size: 30px;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+    color: var(--ink);
+    line-height: 1;
+  }
+
+  .contact {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 8.5px;
+    color: var(--mid);
+    text-align: right;
+    line-height: 1.8;
+    letter-spacing: 0.2px;
+  }
+
+  /* SECTION */
+  .section {
+    margin-bottom: 14px;
+  }
+
+  .section-title {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: #0d3494;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--rule);
+  }
+
+  /* SKILLS */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: 68px 1fr;
+    gap: 3px 10px;
+    font-size: 9px;
+  }
+
+  .skill-label {
+    font-weight: 600;
+    color: var(--ink);
+    font-size: 8.5px;
+    letter-spacing: 0.3px;
+    padding-top: 1px;
+  }
+
+  .skill-value {
+    color: var(--ink);
+    font-size: 9px;
+    line-height: 1.5;
+  }
+
+  /* ENTRY */
+  .entry {
+    margin-bottom: 11px;
+  }
+
+  .entry-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 1px;
+  }
+
+  .entry-title {
+    font-size: 10.5px;
+    font-weight: 600;
+    color: var(--ink);
+    letter-spacing: -0.1px;
+  }
+
+  .entry-date {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 8px;
+    color: var(--light);
+    white-space: nowrap;
+    margin-left: 12px;
+  }
+
+  .entry-sub {
+    font-size: 9px;
+    color: var(--mid);
+    font-style: italic;
+    margin-bottom: 5px;
+  }
+
+  .bullets {
+    list-style: none;
+    padding: 0;
+  }
+
+  .bullets li {
+    font-size: 9px;
+    color: var(--ink);
+    line-height: 1.55;
+    padding-left: 12px;
+    position: relative;
+    margin-bottom: 2px;
+  }
+
+  .bullets li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-size: 8px;
+    font-weight: 600;
+  }
+
+  /* AWARDS & ORGS */
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+
+  .tag {
+    font-size: 8px;
+    color: var(--mid);
+    border: 1px solid var(--rule);
+    padding: 2px 7px;
+    border-radius: 2px;
+    line-height: 1.6;
+    background: #f4f4f2;
+  }
+
+@media print {
+    /* 1. Hide the gray body background */
+    body {
+        background: white !important;
+        margin: 0;
+        padding: 0;
+    }
+
+    /* 2. Ensure your blue line and colors show up */
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    /* 3. Remove any shadows that might be showing the 'page' edges */
+    .container, .resume-card, #main-wrapper { 
+        box-shadow: none !important;
+        margin: 0 !important;
+        border: none !important;
+        width: 100% !important;
+    }
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="name">De<span>John</span> Thompson</div>
+    <div class="contact">
+      415-712-8440<br>
+      <a href="mailto:Dejohnt.03@gmail.com">Dejohnt.03@gmail.com</a><br>
+      <a href="https://linkedin.com/in/De-JohnThompson" target="_blank">linkedin.com/in/De-JohnThompson</a>
+    </div>
+  </div>
+
+  <!-- EDUCATION -->
+  <div class="section">
+    <div class="section-title">Education</div>
+    <div class="entry">
+      <div class="entry-top">
+        <div class="entry-title">Louisiana State University (LSU) — Baton Rouge, LA</div>
+        <div class="entry-date">Aug 2022 – May 2027</div>
+      </div>
+      <div class="entry-sub">B.S. Computer Science, Software Engineering</div>
+    </div>
+    <div class="entry" style="margin-bottom:0">
+      <div class="entry-top">
+        <div class="entry-title">Universidad Carlos III de Madrid — Madrid, Spain</div>
+        <div class="entry-date">Aug 2024 – Jan 2025</div>
+      </div>
+      <div class="entry-sub">Study Abroad: Computer Science, Software Engineering</div>
+    </div>
+  </div>
+
+  <!-- SKILLS -->
+  <div class="section">
+    <div class="section-title">Skills</div>
+    <div class="skills-grid">
+      <div class="skill-label">Technical</div>
+      <div class="skill-value">Python, Java, C, HTML, CSS, JavaScript, C#, Software Testing, Data Structures </div>
+      <div class="skill-label">Tools</div>
+      <div class="skill-value">Claude Code, Github Copilot, Perplexity AI, Figma, Linux MacOS, Unity</div>
+      <div class="skill-label">Strengths</div>
+      <div class="skill-value">Pattern Recognition, Logical Reasoning, Technical Communication, Collaboration, Adaptability, Process Improvement, Curiosity </div>
+      <div class="skill-label">Training</div>
+      <div class="skill-value">CodePath Technical Interview Prep (Dec 2025) — Data structures & algorithms, coding interview readiness</div>
+    </div>
+  </div>
+
+  <!-- PROJECTS -->
+  <div class="section">
+    <div class="section-title">Projects</div>
+    <div class="entry" style="margin-bottom:0">
+      <div class="entry-top">
+        <div class="entry-title">Study Abroad Digital Archive</div>
+        <div class="entry-date">2025</div>
+      </div>
+      <div class="entry-sub">Personal Project &nbsp;|&nbsp; HTML, CSS, JavaScript</div>
+      <ul class="bullets">
+        <li>Built a fully custom multi-page interactive web experience simulating a classified case file with a structured scroll-based layout.</li>
+        <li>Implemented randomized but deterministic content display logic in JavaScript with no frameworks or external libraries.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- EXPERIENCE -->
+  <div class="section">
+    <div class="section-title">Experience</div>
+
+    <div class="entry">
+      <div class="entry-top">
+        <div class="entry-title">Real Estate Development Intern — Presidio Bay Ventures</div>
+        <div class="entry-date">San Francisco, CA &nbsp;|&nbsp; Jun – Aug 2024</div>
+      </div>
+      <ul class="bullets">
+        <li>Built a website using HTML, CSS, and JavaScript to showcase a multi-use development concept, allowing users to explore amenities, events, and rental options.</li>
+        <li>Collaborated with architects, brokers, contractors, and finance teams to refine project designs based on direct community feedback gathered through local interviews and outreach.</li>
+      </ul>
+    </div>
+
+    <div class="entry">
+      <div class="entry-top">
+        <div class="entry-title">Manual Testing & QA Intern — FibroGen</div>
+        <div class="entry-date">San Francisco, CA &nbsp;|&nbsp; Jun – Aug 2023</div>
+      </div>
+      <ul class="bullets">
+        <li>Transformed a physical-only archive of 600+ QA records into a fully searchable digital system, optimizing physical storage space and making records instantly accessible.</li>
+        <li>Managed and maintained employee records, documents, and HR data during a major organizational transition that included a 40% company-wide layoff, ensuring critical files remained accurate and accessible throughout.</li>
+        <li>Delivered weekly status updates to the QA team covering progress, identified risks, and outstanding issues.</li>
+      </ul>
+    </div>
+
+    <div class="entry">
+      <div class="entry-top">
+        <div class="entry-title">Product Platform Designer — The Myers-Briggs Company</div>
+        <div class="entry-date">Sunnyvale, CA &nbsp;|&nbsp; Jun – Aug 2022</div>
+      </div>
+      <ul class="bullets">
+        <li>Identified 5+ bugs and usability issues across the existing platform and documented findings for the engineering team.</li>
+        <li>Designed and iterated on prototypes for a consumer marketplace revamp alongside UX/UI engineers, producing technical documentation to align design decisions with engineering constraints.</li>
+        <li>Contributed to weekly sprints, iterating on prototype designs from early concepts to a polished testable version.</li>
+      </ul>
+    </div>
+
+    <div class="entry" style="margin-bottom:0">
+      <div class="entry-top">
+        <div class="entry-title">Software Engineering Intern — Code Tenderloin</div>
+        <div class="entry-date">San Francisco, CA &nbsp;|&nbsp; Jun – Aug 2022</div>
+      </div>
+      <ul class="bullets">
+        <li>Built responsive websites using HTML, CSS, and JavaScript, improving load performance and cross-browser compatibility.</li>
+        <li>Developed reusable UI components and iterated on feedback to improve site structure and usability.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- AWARDS -->
+  <div class="section">
+    <div class="section-title">Awards & Programs</div>
+    <div class="tags">
+      <span class="tag">Presidio Bay Capstone — Best Design 2024</span>
+      <span class="tag">Boeing Flight Competition Winner 2024</span>
+      <span class="tag">Blackstone Launchpad Program</span>
+      <span class="tag">Career Spring</span>
+      <span class="tag">Microsoft STEM Track</span>
+      <span class="tag">10,000 Degrees Scholar</span>
+      <span class="tag">Maisin Supplemental Scholarship</span>
+      <span class="tag">Omega Alive & Free Collegiate Member</span>
+      <span class="tag">100 College Prep</span>
+    </div>
+  </div>
+
+  <!-- ORGANIZATIONS -->
+  <div class="section" style="margin-bottom:0">
+    <div class="section-title">Organizations</div>
+    <div class="tags">
+      <span class="tag">National Society of Black Engineers</span>
+      <span class="tag">Black Student Union</span>
+      <span class="tag">Lemons Racing LSU</span>
+      <span class="tag">LSU Leadership Coalition</span>
+      <span class="tag">Formula 1 LSU</span>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,10 @@
+INDEX VERSION 1.134+/Users/deejayythompson/CodingWorkspaces/.metadata/.plugins/org.eclipse.jdt.core
+1879711195.index
+2500138556.index
+2354251736.index
+289586061.index
+1247027462.index
+4291925088.index
+1865797976.index
+762616776.index
+3927879410.index
