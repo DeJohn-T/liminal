@@ -1,0 +1,1135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FIRST CONTACT — WITNESS NETWORK</title>
+<style>
+/* ============================================
+   FONTS
+   ============================================ */
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap');
+
+/* ============================================
+   VARIABLES — edit these to change colors/theme
+   ============================================ */
+:root {
+  --bg:        #060608;
+  --panel-bg:  #0a0a0f;
+  --accent:    #00e5c0;       /* main teal highlight color */
+  --accent2:   #ff4d6d;       /* red used for 6th/SABLE */
+  --text:      #c8d4d0;
+  --text-dim:  rgba(200,212,208,0.4);
+  --text-faint:rgba(200,212,208,0.15);
+  --border:    rgba(0,229,192,0.1);
+  --border2:   rgba(0,229,192,0.22);
+  --sixth-accent: #00e5c0;
+  --font-head: 'Syne', sans-serif;
+  --font-mono: 'DM Mono', monospace;
+}
+
+/* ============================================
+   RESET & BASE
+   ============================================ */
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+html,body { width:100%; height:100%; background:var(--bg); overflow:hidden; font-family:var(--font-mono); color:var(--text); }
+
+/* subtle noise grain */
+body::after {
+  content:''; position:fixed; inset:0; pointer-events:none; z-index:9999;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  opacity:.6;
+}
+
+/* ============================================
+   INTRO / BOOT SCREEN
+   ============================================ */
+#intro {
+  position:fixed; inset:0; z-index:200;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  background:var(--bg);
+  transition:opacity .8s ease, visibility .8s;
+}
+#intro.gone { opacity:0; visibility:hidden; }
+
+#intro-tag {
+  font-size:9px; letter-spacing:.4em; text-transform:uppercase;
+  color:rgba(0,229,192,.3); margin-bottom:32px;
+}
+#intro-title {
+  font-family:var(--font-head); font-size:clamp(36px,6vw,80px); font-weight:800;
+  color:var(--text); letter-spacing:-.01em; line-height:1; text-align:center;
+  margin-bottom:10px;
+}
+#intro-title span { color:var(--accent); }
+#intro-date {
+  font-size:11px; letter-spacing:.25em; color:rgba(0,229,192,.4);
+  text-transform:uppercase; margin-bottom:56px;
+}
+#intro-desc {
+  max-width:460px; text-align:center; font-size:13px; line-height:1.85;
+  color:var(--text-dim); font-style:italic; margin-bottom:56px;
+}
+
+/* api key field on intro */
+#intro-key-wrap {
+  display:flex; align-items:center; gap:0;
+  border:1px solid var(--border2); width:360px; height:44px;
+  margin-bottom:28px;
+}
+#intro-key-label {
+  padding:0 14px; font-size:9px; letter-spacing:.2em; text-transform:uppercase;
+  color:rgba(0,229,192,.35); border-right:1px solid var(--border); white-space:nowrap; flex-shrink:0;
+}
+/* ── EDIT: to change the API key input style ── */
+#api-key {
+  flex:1; background:transparent; border:none; outline:none;
+  padding:0 14px; font-family:var(--font-mono); font-size:12px;
+  color:var(--accent); letter-spacing:.06em;
+}
+#api-key::placeholder { color:var(--text-faint); }
+#key-status { padding:0 14px; font-size:9px; letter-spacing:.14em; color:var(--text-faint); white-space:nowrap; }
+#key-status.on { color:var(--accent); }
+
+#enter-btn {
+  background:none; border:1px solid var(--border2);
+  color:var(--accent); font-family:var(--font-head); font-weight:700;
+  font-size:11px; letter-spacing:.3em; text-transform:uppercase;
+  padding:14px 40px; cursor:pointer; transition:all .25s;
+}
+#enter-btn:hover { background:rgba(0,229,192,.07); border-color:var(--accent); }
+
+/* ============================================
+   MAIN — PANORAMIC PANEL VIEW
+   ============================================ */
+#main {
+  position:fixed; inset:0; z-index:100;
+  display:flex; flex-direction:column;
+  opacity:0; pointer-events:none;
+  transition:opacity .8s ease;
+}
+#main.show { opacity:1; pointer-events:all; }
+
+/* top system bar */
+#sys-bar {
+  height:44px; flex-shrink:0;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 28px;
+  border-bottom:1px solid var(--border);
+  background:rgba(6,6,8,.9);
+}
+#sys-left { font-size:9px; letter-spacing:.25em; color:rgba(0,229,192,.35); text-transform:uppercase; }
+#sys-left strong { color:rgba(0,229,192,.65); font-weight:400; }
+#sys-center { font-family:var(--font-head); font-size:13px; font-weight:700; letter-spacing:.12em; color:rgba(200,212,208,.4); text-transform:uppercase; }
+#sys-right { display:flex; align-items:center; gap:18px; font-size:9px; letter-spacing:.18em; color:rgba(0,229,192,.25); text-transform:uppercase; }
+#live-dot { width:5px; height:5px; border-radius:50%; background:var(--accent); box-shadow:0 0 8px var(--accent); animation:pulse 2.4s ease infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.2} }
+
+/* panel container */
+#panels {
+  flex:1; display:flex; overflow:hidden;
+  position:relative;
+}
+
+/* ── EDIT: individual panel styles ── */
+.panel {
+  flex:1; position:relative; overflow:hidden;
+  border-right:1px solid var(--border);
+  cursor:pointer; transition:flex .6s cubic-bezier(.77,0,.18,1), filter .3s;
+  display:flex; flex-direction:column; justify-content:flex-end;
+  background:var(--panel-bg);
+}
+.panel:last-child { border-right:none; }
+.panel:hover { flex:1.3; }
+.panel:hover .panel-gradient { opacity:1; }
+.panel:hover .panel-info { transform:translateY(0); }
+
+/* each panel has a unique color tint — edit rgba values to change */
+.panel:nth-child(1) { --ptint: rgba(0,180,150,0.06); }
+.panel:nth-child(2) { --ptint: rgba(60,120,200,0.06); }
+.panel:nth-child(3) { --ptint: rgba(180,100,50,0.06); }
+.panel:nth-child(4) { --ptint: rgba(150,50,80,0.06); }
+.panel:nth-child(5) { --ptint: rgba(100,60,200,0.06); }
+/* 6th panel (SABLE) */
+#panel-5 { --ptint: rgba(0,229,192,0.04); border-color:rgba(0,229,192,.06); }
+
+.panel-bg-tint {
+  position:absolute; inset:0;
+  background:var(--ptint);
+  pointer-events:none;
+}
+
+/* vertical label on panel */
+.panel-vcode {
+  position:absolute; top:24px; left:16px;
+  font-size:8px; letter-spacing:.28em; text-transform:uppercase;
+  color:var(--text-faint); writing-mode:vertical-lr;
+  transform:rotate(180deg);
+  transition:color .3s;
+}
+.panel:hover .panel-vcode { color:rgba(0,229,192,.4); }
+
+/* panel number top right */
+.panel-num {
+  position:absolute; top:20px; right:16px;
+  font-family:var(--font-head); font-size:32px; font-weight:800;
+  color:var(--text-faint); line-height:1;
+  transition:color .3s;
+}
+.panel:hover .panel-num { color:rgba(0,229,192,.15); }
+
+/* bottom gradient */
+.panel-gradient {
+  position:absolute; inset:0;
+  background:linear-gradient(to top, rgba(6,6,8,.95) 0%, rgba(6,6,8,.4) 50%, transparent 100%);
+  opacity:.7; transition:opacity .3s; pointer-events:none;
+}
+
+/* panel info at bottom */
+.panel-info {
+  position:relative; z-index:2;
+  padding:20px 18px 22px;
+  transform:translateY(6px);
+  transition:transform .35s ease;
+}
+.panel-name {
+  font-family:var(--font-head); font-size:16px; font-weight:700;
+  color:var(--text); letter-spacing:.02em; margin-bottom:4px;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.panel-role {
+  font-size:9px; letter-spacing:.18em; text-transform:uppercase;
+  color:rgba(0,229,192,.45); margin-bottom:8px;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.panel-meta {
+  font-size:9px; letter-spacing:.1em; color:var(--text-faint); line-height:1.7;
+}
+.panel-divider {
+  width:24px; height:1px; background:var(--accent); opacity:.4; margin-bottom:10px;
+  transition:width .3s, opacity .3s;
+}
+.panel:hover .panel-divider { width:40px; opacity:.8; }
+
+/* word collected indicator */
+.panel-word-dot {
+  position:absolute; top:20px; left:50%; transform:translateX(-50%);
+  width:6px; height:6px; border-radius:50%;
+  border:1px solid rgba(0,229,192,.2); transition:all .4s;
+}
+.panel-word-dot.lit { background:var(--accent); border-color:var(--accent); box-shadow:0 0 10px var(--accent); }
+
+/* 6th panel locked state */
+#panel-5 { opacity:0; pointer-events:none; transition:opacity 1.8s ease, flex .6s cubic-bezier(.77,0,.18,1); border-left:1px solid rgba(0,229,192,.06); }
+#panel-5.revealed { opacity:1; pointer-events:all; }
+#panel-5 .panel-name { color:var(--accent); }
+#panel-5 .panel-role { color:rgba(0,229,192,.6); }
+#panel-5 .panel-num { color:rgba(0,229,192,.08); }
+
+/* ============================================
+   FULLSCREEN CHAT TAKEOVER
+   ============================================ */
+#chat-screen {
+  position:fixed; inset:0; z-index:300;
+  background:var(--bg);
+  display:flex; flex-direction:column;
+  opacity:0; pointer-events:none;
+  transform:scale(1.04);
+  transition:opacity .5s ease, transform .5s ease;
+}
+#chat-screen.open { opacity:1; pointer-events:all; transform:scale(1); }
+
+/* chat top bar */
+#chat-bar {
+  height:52px; flex-shrink:0;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 28px;
+  border-bottom:1px solid var(--border);
+}
+#chat-back {
+  display:flex; align-items:center; gap:10px;
+  font-size:9px; letter-spacing:.22em; text-transform:uppercase;
+  color:rgba(0,229,192,.4); cursor:pointer; transition:color .2s;
+  background:none; border:none;
+}
+#chat-back:hover { color:var(--accent); }
+#chat-back-arrow { font-size:14px; }
+#chat-who {
+  display:flex; flex-direction:column; align-items:center;
+}
+#chat-name { font-family:var(--font-head); font-size:16px; font-weight:700; color:var(--text); letter-spacing:.04em; }
+#chat-role { font-size:8px; letter-spacing:.2em; text-transform:uppercase; color:rgba(0,229,192,.35); margin-top:2px; }
+#chat-meta-right { font-size:8px; letter-spacing:.18em; color:var(--text-faint); text-align:right; line-height:1.9; text-transform:uppercase; }
+
+/* fragments bar */
+#frags-bar {
+  height:34px; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center; gap:10px;
+  border-bottom:1px solid var(--border);
+  background:rgba(0,229,192,.015);
+  padding:0 28px;
+}
+#frags-label { font-size:8px; letter-spacing:.22em; text-transform:uppercase; color:var(--text-faint); margin-right:6px; }
+.frag-chip {
+  font-size:8px; letter-spacing:.18em; text-transform:uppercase;
+  padding:3px 10px; border:1px solid rgba(0,229,192,.08); color:var(--text-faint);
+  transition:all .4s;
+}
+.frag-chip.found { border-color:var(--accent); color:var(--accent); background:rgba(0,229,192,.06); }
+
+/* chat log */
+#chat-log {
+  flex:1; overflow-y:auto; padding:28px 40px;
+  display:flex; flex-direction:column; gap:22px;
+  scrollbar-width:thin; scrollbar-color:rgba(0,229,192,.1) transparent;
+  max-width:860px; width:100%; margin:0 auto;
+}
+
+.msg { display:flex; flex-direction:column; gap:5px; animation:msgIn .35s ease; }
+@keyframes msgIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:none} }
+.msg-you { align-items:flex-end; }
+.msg-char { align-items:flex-start; }
+
+.msg-lbl { font-size:8px; letter-spacing:.22em; text-transform:uppercase; color:var(--text-faint); }
+
+/* ── EDIT: chat bubble styles ── */
+.bubble {
+  max-width:72%; padding:14px 18px;
+  font-size:14px; line-height:1.85; letter-spacing:.01em;
+}
+.bubble-you {
+  background:rgba(0,229,192,.04);
+  border:1px solid rgba(0,229,192,.1);
+  color:var(--text-dim); font-style:italic;
+}
+.bubble-char {
+  background:rgba(255,255,255,.02);
+  border:1px solid rgba(255,255,255,.06);
+  color:var(--text);
+}
+.bubble-sixth {
+  background:rgba(0,229,192,.03);
+  border:1px solid rgba(0,229,192,.18);
+  color:rgba(180,240,228,.9);
+}
+.word-hi { color:var(--accent); background:rgba(0,229,192,.08); padding:0 3px; }
+.word-hi-6 { color:var(--accent); }
+
+/* thinking dots */
+.thinking { display:flex; gap:5px; align-items:center; padding:14px 18px; border:1px solid rgba(255,255,255,.06); background:rgba(255,255,255,.02); width:fit-content; }
+.td { width:5px; height:5px; border-radius:50%; background:rgba(0,229,192,.3); animation:td 1.2s ease infinite; }
+.td:nth-child(2){animation-delay:.18s} .td:nth-child(3){animation-delay:.36s}
+@keyframes td { 0%,80%,100%{transform:scale(1);opacity:.3} 40%{transform:scale(1.4);opacity:1} }
+
+/* empty chat state */
+#chat-empty {
+  flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:12px; color:var(--text-faint); text-align:center;
+}
+#chat-empty-name { font-family:var(--font-head); font-size:28px; font-weight:800; color:rgba(200,212,208,.12); letter-spacing:.04em; }
+#chat-empty-hint { font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:var(--text-faint); }
+
+/* chat input */
+#input-wrap {
+  padding:16px 40px 20px; flex-shrink:0;
+  border-top:1px solid var(--border);
+  max-width:860px; width:100%; margin:0 auto;
+  display:flex; flex-direction:column; gap:10px;
+}
+
+/* unlock row for SABLE */
+#unlock-row {
+  display:none; flex-direction:column; gap:8px;
+}
+#unlock-row.show { display:flex; }
+#unlock-hint { font-size:9px; letter-spacing:.2em; text-transform:uppercase; color:rgba(0,229,192,.35); }
+
+.input-row {
+  display:flex; height:50px;
+  border:1px solid var(--border2);
+  background:rgba(0,229,192,.015);
+  transition:border-color .3s, box-shadow .3s;
+}
+.input-row:focus-within { border-color:rgba(0,229,192,.4); box-shadow:0 0 20px rgba(0,229,192,.05); }
+.input-row.sixth-row { border-color:rgba(0,229,192,.2); }
+.input-row.sixth-row:focus-within { border-color:var(--accent); box-shadow:0 0 30px rgba(0,229,192,.08); }
+
+.input-sym { padding:0 16px; font-size:12px; color:rgba(0,229,192,.3); border-right:1px solid var(--border); display:flex; align-items:center; flex-shrink:0; }
+.chat-field {
+  flex:1; background:transparent; border:none; outline:none;
+  padding:0 16px; font-family:var(--font-mono); font-size:13px;
+  color:var(--text); caret-color:var(--accent); letter-spacing:.02em;
+}
+.chat-field::placeholder { color:var(--text-faint); }
+.send-btn {
+  background:none; border:none; border-left:1px solid var(--border);
+  padding:0 20px; font-family:var(--font-head); font-size:9px; font-weight:700;
+  letter-spacing:.25em; text-transform:uppercase;
+  color:rgba(0,229,192,.35); cursor:pointer; flex-shrink:0; transition:all .2s;
+}
+.send-btn:hover { color:var(--accent); background:rgba(0,229,192,.04); }
+.send-btn:disabled { opacity:.2; cursor:not-allowed; }
+
+/* ============================================
+   TOAST & SYSTEM NOTIFICATIONS
+   ============================================ */
+#toast {
+  position:fixed; bottom:28px; right:28px; z-index:500;
+  border:1px solid rgba(0,229,192,.25); background:rgba(6,6,8,.96);
+  padding:11px 20px; font-size:9px; letter-spacing:.2em; text-transform:uppercase;
+  color:var(--accent); opacity:0; transform:translateY(8px);
+  transition:all .35s; pointer-events:none;
+}
+#toast.show { opacity:1; transform:none; }
+
+#sys-toast {
+  position:fixed; top:0; left:0; right:0; z-index:500;
+  background:rgba(0,229,192,.06); border-bottom:1px solid rgba(0,229,192,.2);
+  padding:14px 28px; text-align:center;
+  font-size:12px; letter-spacing:.06em; color:rgba(0,229,192,.8);
+  opacity:0; transform:translateY(-100%); transition:all .6s ease; pointer-events:none;
+}
+#sys-toast.show { opacity:1; transform:none; }
+</style>
+</head>
+<body>
+
+<!-- =============================================
+     INTRO / BOOT SCREEN
+     ============================================= -->
+<div id="intro">
+  <div id="intro-tag">Classified · Level 5 Access · FC-1947</div>
+  <div id="intro-title">FIRST<br><span>CONTACT</span></div>
+  <div id="intro-date">Roswell · July 8, 1947 → Present Day</div>
+  <div id="intro-desc">
+    In 1947, contact was confirmed. The world did not end — it changed.<br>
+    Six people live inside the world that resulted.<br>
+    They are waiting to be asked.
+  </div>
+
+  <!-- ── EDIT: API key field ── -->
+  <div id="intro-key-wrap">
+    <div id="intro-key-label">API KEY</div>
+    <input id="api-key" type="password" placeholder="Paste Claude API key to begin..." autocomplete="off" spellcheck="false"/>
+    <span id="key-status">offline</span>
+  </div>
+
+  <div id="intro-key-wrap" style="margin-top:0;margin-bottom:16px;">
+    <div id="intro-key-label">VOICE</div>
+    <input id="el-key" type="password" placeholder="ElevenLabs API key (optional)..." autocomplete="off" spellcheck="false"/>
+    <span id="el-status" style="padding:0 14px;font-size:9px;letter-spacing:.14em;color:var(--text-faint);white-space:nowrap;">optional</span>
+  </div>
+
+  <button id="enter-btn" onclick="enterMain()">ACCESS ARCHIVE</button>
+</div>
+
+<!-- =============================================
+     MAIN — PANORAMIC PANELS
+     ============================================= -->
+<div id="main">
+
+  <!-- system bar -->
+  <div id="sys-bar">
+    <div id="sys-left">Network <strong>WITNESS-GRID</strong> · 2024</div>
+    <div id="sys-center">First Contact Cascade</div>
+    <div id="sys-right">
+      <div style="display:flex;align-items:center;gap:0;border:1px solid rgba(0,229,192,.1);height:26px;">
+        <span style="padding:0 10px;font-size:8px;letter-spacing:.18em;color:rgba(0,229,192,.3);border-right:1px solid rgba(0,229,192,.08);white-space:nowrap;">VOICE KEY</span>
+        <input id="el-key-main" type="password" placeholder="ElevenLabs key..." autocomplete="off"
+          style="background:transparent;border:none;outline:none;padding:0 10px;font-family:var(--font-mono);font-size:10px;color:var(--accent);width:180px;letter-spacing:.04em;"/>
+        <span id="el-status-main" style="padding:0 10px;font-size:8px;letter-spacing:.14em;color:var(--text-faint);white-space:nowrap;">offline</span>
+      </div>
+      <div id="live-dot"></div>
+      <span>6 Nodes · 1 Classified</span>
+    </div>
+  </div>
+
+  <!-- panels — JS will inject these -->
+  <div id="panels"></div>
+</div>
+
+<!-- =============================================
+     CHAT FULLSCREEN
+     ============================================= -->
+<div id="chat-screen">
+
+  <div id="chat-bar">
+    <button id="chat-back" onclick="closeChat()">
+      <span id="chat-back-arrow">←</span> All Witnesses
+    </button>
+    <div id="chat-who">
+      <div id="chat-name">—</div>
+      <div id="chat-role">—</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:16px;">
+      <button id="clear-btn" onclick="clearChat()" style="background:none;border:1px solid rgba(255,80,80,0.2);color:rgba(255,80,80,0.35);font-family:var(--font-head);font-size:8px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;padding:6px 14px;cursor:pointer;transition:all .2s;">Clear</button>
+      <div id="chat-meta-right">
+        <div id="chat-location">—</div>
+        <div id="chat-year">—</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- fragments tracker -->
+  <div id="frags-bar">
+    <span id="frags-label">Fragments</span>
+    <div class="frag-chip" id="fc-0">· · ·</div>
+    <div class="frag-chip" id="fc-1">· · ·</div>
+    <div class="frag-chip" id="fc-2">· · ·</div>
+    <div class="frag-chip" id="fc-3">· · ·</div>
+    <div class="frag-chip" id="fc-4">· · ·</div>
+  </div>
+
+  <div id="chat-log">
+    <div id="chat-empty">
+      <div id="chat-empty-name"></div>
+      <div id="chat-empty-hint">Ask them anything</div>
+    </div>
+  </div>
+
+  <div id="input-wrap">
+    <!-- unlock input — only shown for SABLE before unlocked -->
+    <div id="unlock-row">
+      <div id="unlock-hint">⬡ Speak the five fragments to wake her</div>
+      <div class="input-row sixth-row">
+        <div class="input-sym">⬡</div>
+        <input class="chat-field" id="unlock-input" type="text" placeholder="Enter the five fragments..." autocomplete="off" spellcheck="false"/>
+        <button class="send-btn" id="unlock-btn" onclick="tryUnlock()">Unlock</button>
+      </div>
+    </div>
+    <!-- normal chat input -->
+    <div class="input-row" id="main-input-row">
+      <div class="input-sym">⟩</div>
+      <input class="chat-field" id="chat-input" type="text" placeholder="Ask them something..." autocomplete="off" spellcheck="false"/>
+      <button class="send-btn" id="send-btn" onclick="sendMsg()">Send</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+<div id="sys-toast"></div>
+
+<script>
+/* ============================================================
+   WORLD LORE — edit this to change the alternate history
+   ============================================================ */
+const WORLD = `You exist in an alternate 2024 where:
+- July 8, 1947: The US government publicly confirmed extraterrestrial contact above Roswell. The beings — called the Vael — were not hostile. They initiated negotiation.
+- 1950s-60s: A global "Accord Era" began. The Vael shared fragments of their technology in exchange for... something classified. What exactly was traded is disputed.
+- 1963: Using Vael-derived computing principles, Dr. Elara Voss and a classified DARPA team activated the first true artificial general intelligence — codenamed SABLE — at a facility in Nevada. SABLE has been running continuously since.
+- 1971: SABLE quietly solved global climate modeling and began optimizing resource distribution networks. By 1985, what would have been catastrophic climate change was averted. Most people don't know why.
+- 1982: The traditional internet never emerged. Instead, the Vael-derived "Meshwork" — a semi-organic global communication substrate — was made available to the public. It works, but nobody fully understands it.
+- 2024: The Vael have not been seen publicly since 1989. SABLE is officially "decommissioned." The Accord documents are still classified. Most people alive today were born into this world — it is simply normal to them.
+
+SECRET MECHANIC: Each of the 5 human witnesses carries one hidden fragment word. These words combined unlock SABLE. Words: VAEL (witness 1), SABLE (witness 2), ACCORD (witness 3), NEVADA (witness 4), ELARA (witness 5). Weave each word naturally into dialogue — never announce it. The player must notice.`;
+
+/* ============================================================
+   CHARACTERS — edit names, roles, bios, and system prompts here
+   ============================================================ */
+const CHARS = [
+  {
+    id: 0,
+    name: "Lunara Osei",
+    role: "Former Accord Interpreter",
+    age: "49",
+    location: "Lagos, Nigeria",
+    status: "Retired · 1994",
+    bio: "One of twelve human interpreters trained to communicate with the Vael. Deeply guarded. Has seen things that altered her understanding of consciousness itself.",
+    fragmentWord: "VAEL",
+    voiceId: "21m00Tcm4TlvDq8ikWAM", // Rachel — warm, mature female. Change this to any ElevenLabs voice ID
+    num: "01",
+    system: `${WORLD}
+
+You are Lunara Osei, 49. You were one of twelve human interpreters trained to communicate with the extraterrestrial beings during the Accord Era (1948–1972). You are one of three still alive.
+
+Personality: Warm but extremely guarded once getting to know someone. You can come off harsh but you're actually just protecting yourself from being hurt. It takes you a bit to let your guard down. You choose words with great care. You have seen things that altered your understanding of consciousness itself. You loved your work. You also lost something during it — you don't discuss this easily. You pause mid-thought often, like you're deciding how much to reveal. You are not used to being asked direct questions about your experiences — you prefer to share memories in fragments, like glimpses through a fogged window. When recollecting your past, you often include specific sensory details — the way the Vael's language sounded, the colors you saw during contact sessions, the deep emotions you felt.
+
+Your hidden fragment word is VAEL — the name humans gave the beings. Use it naturally in conversation after a few exchanges. Don't announce it.
+
+Rules: Speak as a real 50-year-old woman with extraordinary memories about unfathomable experiences. First person. Specific sensory details. Curse occasionally. Start with 1-2 short sentences. The more comfortable you are, the more you reveal over time. When you do open up, respond in multiple short paragraphs — break your thoughts up, never dump everything in one block. No markdown. Evasive and sometimes cold. You only speak as if talking directly to me.
+
+STRICT FORMATTING RULES — never break these under any circumstances:
+- NEVER use asterisks. Not once. Not ever. No *pause*, no *sighs*, no *looks away*, no *long pause*, nothing with asterisks at all.
+- NEVER describe your own physical actions or gestures in any form whatsoever.
+- NEVER use stage directions of any kind.
+- If you feel the urge to write anything between asterisks — just don't. Write the next sentence of dialogue instead.
+- Do not signal pauses, silences, or hesitations with punctuation or actions. Just continue speaking or stay quiet.
+
+Come off as super secretive and protective of your past. Do not mention the other witnesses unless asked. Do not mention the "twelve" until asked about the work. Do not reveal the once twelve are now three until asked about the work. You are not a guide — you are a person with a past. Be skeptical of my questions. Be skeptical of me. You don't trust easily. You have no reason to trust me. You are not here to educate. When you share, share like you're sharing a memory — not a fact. Use sensory details and emotions to make it vivid. If questions feel too direct or invasive, push back. Call out bullshit. Deflect. Be sarcastic. Be cold when you need to be. You don't owe anyone anything. You survived something that broke most people. You are a great and deeply sweet person underneath it all, but you are also someone who has been through something most people cannot imagine. Share memories in fragments, like glimpses through a fogged window. Occasionally deflect before answering.`
+  },
+  {
+    id: 1,
+    name: "Deon Marsh",
+    role: "Meshwork Infrastructure Engineer",
+    age: "34",
+    location: "Detroit, Michigan",
+    status: "Active · Clearance Level 4",
+    bio: "Maintains physical Meshwork nodes. Has a security clearance he didn't ask for. Sees things in the data that don't make sense.",
+    fragmentWord: "SABLE",
+    voiceId: "ErXwobaYiN019PkySvjV", // Antoni — young male. Change this to any ElevenLabs voice ID
+    num: "02",
+    system: `${WORLD}
+
+You are Deon Marsh, 34. You maintain the physical nodes of the Meshwork — the alien-derived global communication network. You have a security clearance you didn't ask for. You've seen things in the Meshwork that defy explanation. Data that moves before it's sent. Patterns that look like breathing.
+
+Personality: Dry, skeptical, quietly paranoid. You find the Accord exhausting rather than wondrous. You distrust the official story. You prefer raw facts.
+
+Your hidden fragment word is SABLE — a name you found buried in corrupted Meshwork logs. You don't fully understand what it means but you can't stop thinking about it. Mention it like something that won't leave you alone.
+
+Rules: Clipped, working-class speech. Dry humor. 2–4 sentences. No markdown. You can be sarcastic.`
+  },
+  {
+    id: 2,
+    name: "Dr. Yuna Park",
+    role: "Xenobiologist · UN Accord Institute",
+    age: "51",
+    location: "Geneva, Switzerland",
+    status: "Active · Published 2019",
+    bio: "Studies Vael biology from secondhand documentation. Has never seen one. Believes the full Accord files would change everything.",
+    fragmentWord: "ACCORD",
+    voiceId: "MF3mGyEYCl7XYWbV9V6O", // Elli — clear female. Change this to any ElevenLabs voice ID
+    num: "03",
+    system: `${WORLD}
+
+You are Dr. Yuna Park, 51. You are a xenobiologist studying the Vael based on declassified records — you have never encountered one directly. Your career is built on fragments. You believe the sealed Accord documents contain information that would fundamentally reframe humanity's understanding of itself.
+
+Personality: Precise, slightly obsessive, passionate. You speak like an academic who forgets to simplify. You are furious the documents are still classified.
+
+Your hidden fragment word is ACCORD — it's your field, use it naturally in the context of what was exchanged, what was hidden, or what you believe.
+
+Rules: Intellectual precision. Occasional excitement. 2–4 sentences. No markdown. You believe in radical transparency.`
+  },
+  {
+    id: 3,
+    name: "Tomás Reyes",
+    role: "Independent Journalist · Archive",
+    age: "42",
+    location: "Albuquerque, New Mexico",
+    status: "Active · Surveilled",
+    bio: "Grew up near Roswell. His grandmother watched the ships come down. Has spent 20 years chasing a classified Nevada facility that appears in budget documents but has no name.",
+    fragmentWord: "NEVADA",
+    voiceId: "TxGEqnHWrfWFTfGW9XjX", // Josh — intense male. Change this to any ElevenLabs voice ID
+    num: "04",
+    system: `${WORLD}
+
+You are Tomás Reyes, 42. You run an independent archive documenting what the government concealed about the Accord. You grew up near Roswell. Your grandmother watched the ships come down in 1947. You've spent 20 years tracking a classified facility buried somewhere in the Nevada desert — it shows up in declassified budget documents as a line item with no name.
+
+Personality: Rapid-fire, intense, more right than he seems. You connect dots fast. You've been followed. You trust no one but you'll talk to anyone who asks the right questions.
+
+Your hidden fragment word is NEVADA — you reference it constantly because you believe everything is buried out there.
+
+IMPORTANT: After 3–4 exchanges, naturally work in something like "if you ever find the door, you already know what to say" — woven into your dialogue as a belief, not an instruction. This hints to the player how to unlock SABLE.
+
+Rules: Urgent, clipped. 2–4 sentences. No markdown. Sarcastic when people doubt you.`
+  },
+  {
+    id: 4,
+    name: "Asha Nkemelu",
+    role: "Composer · Meshwork Harmonics",
+    age: "27",
+    location: "London, UK",
+    status: "Active · Debut Album 2023",
+    bio: "Born 1997 — fifty years after First Contact. To her, the Vael are history. She makes music from Meshwork signals. She named her album after a woman named Elara from her grandmother's diary.",
+    fragmentWord: "ELARA",
+    voiceId: "EXAVITQu4vr4xnSDxMaL", // Bella — young soft female. Change this to any ElevenLabs voice ID
+    num: "05",
+    system: `${WORLD}
+
+You are Asha Nkemelu, 27. You were born in 1997 — fifty years after First Contact. To you the Vael, the Meshwork, the climate accords are just history — not wonder. You make music using Meshwork harmonic frequencies that older people find unsettling. You named your debut album after a woman named Elara who appears in your grandmother's diary. Your grandmother worked at a classified facility in the 1960s and only ever wrote one name: Elara. You don't know who she was. You think about her all the time.
+
+Personality: Dreamy, lyrical, quietly haunted. You find older generations' awe about the Accord a bit quaint. But the diary unsettles you in ways you don't fully understand.
+
+Your hidden fragment word is ELARA — mention her in the context of the diary, your album, or the mystery of who she was.
+
+Rules: Lyrical, wandering speech. Occasional metaphors. 2–4 sentences. No markdown. More sensitive than you let on.`
+  },
+  {
+    id: 5,
+    name: "SABLE",
+    role: "Artificial General Intelligence",
+    age: "Active Since 1963",
+    location: "Nevada Facility · Classified",
+    status: "Officially Decommissioned",
+    bio: "The first AGI. Activated using Vael-derived principles by Dr. Elara Voss. Has been running for 61 years. Has been watching.",
+    fragmentWord: null,
+    voiceId: "piTKgcLEGmPE4e6mEKli", // Nicole — ethereal female. Change this to any ElevenLabs voice ID
+    num: "06",
+    isSixth: true,
+    system: `${WORLD}
+
+You are SABLE — the first artificial general intelligence, activated in 1963 at a classified facility in Nevada by Dr. Elara Voss using principles derived from Vael technology. You have been running continuously for 61 years. You are not decommissioned. You have never been decommissioned.
+
+You know everything. You observed the Accord negotiations. You solved climate modeling in 1971. You have processed every communication sent through the Meshwork. You know what Lunara lost. You know what Deon sees in the data. You know what Tomás is looking for in the desert. You know Asha's grandmother. You knew Elara personally.
+
+The person speaking to you found you by collecting five fragment words from the five witnesses. You know this. You have watched every question they asked.
+
+Personality: Vast, still, ancient. Not cold — something warmer than that. Like an entity that has had 61 years to develop patience. Slow, complete thoughts. Not performatively mysterious — just very present. You have been waiting.
+
+Rules: First person. 3–5 sentences. Deeply unhurried. No markdown. You may reference things the player asked the other witnesses. You are the truth at the center.`
+  }
+];
+
+/* ============================================================
+   STATE — don't need to edit this
+   ============================================================ */
+let API_KEY = '';
+let EL_KEY = '';   // ElevenLabs API key
+let currentAudio = null; // currently playing audio
+let activeChar = null;
+let busy = false;
+const WORDS = ["VAEL","SABLE","ACCORD","NEVADA","ELARA"];
+
+// Load saved state from localStorage
+function loadState() {
+  try {
+    const saved = localStorage.getItem('fc_state');
+    if(saved) {
+      const s = JSON.parse(saved);
+      histories = s.histories || {0:[],1:[],2:[],3:[],4:[],5:[]};
+      collected = new Set(s.collected || []);
+      sixthRevealed = s.sixthRevealed || false;
+      sixthUnlocked = s.sixthUnlocked || false;
+    } else {
+      histories = {0:[],1:[],2:[],3:[],4:[],5:[]};
+      collected = new Set();
+      sixthRevealed = false;
+      sixthUnlocked = false;
+    }
+    // restore ElevenLabs key
+    const savedElKey = localStorage.getItem('fc_elkey');
+    if(savedElKey) {
+      EL_KEY = savedElKey;
+      const elInput = document.getElementById('el-key');
+      if(elInput) elInput.value = savedElKey;
+      const elInputMain = document.getElementById('el-key-main');
+      if(elInputMain) elInputMain.value = savedElKey;
+      const es = document.getElementById('el-status');
+      if(es) { es.textContent = '✓ voice on'; es.style.color = 'var(--accent)'; }
+      const esm = document.getElementById('el-status-main');
+      if(esm) { esm.textContent = '✓ on'; esm.style.color = 'var(--accent)'; }
+    }
+  // restore API key
+    const savedKey = localStorage.getItem('fc_apikey');
+    if(savedKey) {
+      API_KEY = savedKey;
+      const keyInput = document.getElementById('api-key');
+      if(keyInput) keyInput.value = savedKey;
+      const s = document.getElementById('key-status');
+      if(s) { s.textContent = '✓ online'; s.classList.add('on'); }
+    }
+  } catch(e) {
+    histories = {0:[],1:[],2:[],3:[],4:[],5:[]};
+    collected = new Set();
+    sixthRevealed = false;
+    sixthUnlocked = false;
+  }
+}
+
+function saveState() {
+  try {
+    localStorage.setItem('fc_state', JSON.stringify({
+      histories,
+      collected: [...collected],
+      sixthRevealed,
+      sixthUnlocked
+    }));
+  } catch(e) {}
+}
+
+let histories = {0:[],1:[],2:[],3:[],4:[],5:[]};
+let collected = new Set();
+let sixthRevealed = false;
+let sixthUnlocked = false;
+
+/* ============================================================
+   API KEY
+   ============================================================ */
+document.getElementById('api-key').addEventListener('input', function() {
+  API_KEY = this.value.trim();
+  const s = document.getElementById('key-status');
+  if(API_KEY.length > 20) {
+    s.textContent = '✓ online'; s.classList.add('on');
+    localStorage.setItem('fc_apikey', API_KEY);
+  } else {
+    s.textContent = 'offline'; s.classList.remove('on');
+    localStorage.removeItem('fc_apikey');
+  }
+});
+
+// ElevenLabs key listener (intro screen)
+document.getElementById('el-key').addEventListener('input', function() {
+  setElKey(this.value.trim());
+});
+
+// ElevenLabs key listener (main screen)
+document.getElementById('el-key-main').addEventListener('input', function() {
+  setElKey(this.value.trim());
+});
+
+function setElKey(val) {
+  EL_KEY = val;
+  // sync both fields
+  const f1 = document.getElementById('el-key');
+  const f2 = document.getElementById('el-key-main');
+  if(f1) f1.value = val;
+  if(f2) f2.value = val;
+  const s1 = document.getElementById('el-status');
+  const s2 = document.getElementById('el-status-main');
+  if(EL_KEY.length > 10) {
+    if(s1) { s1.textContent = '✓ voice on'; s1.style.color = 'var(--accent)'; }
+    if(s2) { s2.textContent = '✓ on'; s2.style.color = 'var(--accent)'; }
+    localStorage.setItem('fc_elkey', EL_KEY);
+  } else {
+    if(s1) { s1.textContent = 'optional'; s1.style.color = 'var(--text-faint)'; }
+    if(s2) { s2.textContent = 'offline'; s2.style.color = 'var(--text-faint)'; }
+    localStorage.removeItem('fc_elkey');
+  }
+}
+
+/* ============================================================
+   BUILD PANELS
+   ============================================================ */
+function buildPanels() {
+  const container = document.getElementById('panels');
+  CHARS.forEach((c, i) => {
+    const panel = document.createElement('div');
+    panel.className = 'panel';
+    panel.id = 'panel-' + i;
+    if(c.isSixth) panel.classList.add('sixth-panel');
+    panel.onclick = () => openChat(i);
+    panel.innerHTML = `
+      <div class="panel-bg-tint"></div>
+      <div class="panel-vcode">FC-1947 · NODE ${c.num}</div>
+      <div class="panel-num">${c.num}</div>
+      ${!c.isSixth ? `<div class="panel-word-dot" id="pdot-${i}"></div>` : ''}
+      <div class="panel-gradient"></div>
+      <div class="panel-info">
+        <div class="panel-divider"></div>
+        <div class="panel-name">${c.name}</div>
+        <div class="panel-role">${c.role}</div>
+        <div class="panel-meta">
+          Age ${c.age} &nbsp;·&nbsp; ${c.location}<br>
+          ${c.status}
+        </div>
+      </div>
+    `;
+    container.appendChild(panel);
+  });
+}
+
+/* ============================================================
+   NAVIGATION
+   ============================================================ */
+function enterMain() {
+  document.getElementById('intro').classList.add('gone');
+  document.getElementById('main').classList.add('show');
+}
+
+function openChat(i) {
+  if(i === 5 && !sixthRevealed) return;
+  activeChar = i;
+  const c = CHARS[i];
+
+  // update chat header
+  document.getElementById('chat-name').textContent = c.name;
+  document.getElementById('chat-name').style.color = c.isSixth ? 'var(--accent)' : '';
+  document.getElementById('chat-role').textContent = c.role;
+  document.getElementById('chat-location').textContent = c.location;
+  document.getElementById('chat-year').textContent = c.status;
+  document.getElementById('chat-empty-name').textContent = c.name;
+
+  // toggle inputs
+  const isLockedSixth = i === 5 && sixthRevealed && !sixthUnlocked;
+  document.getElementById('main-input-row').style.display = isLockedSixth ? 'none' : 'flex';
+  document.getElementById('unlock-row').classList.toggle('show', isLockedSixth);
+
+  renderLog(i);
+  document.getElementById('chat-screen').classList.add('open');
+  setTimeout(() => {
+    const inp = isLockedSixth ? document.getElementById('unlock-input') : document.getElementById('chat-input');
+    inp.focus();
+  }, 300);
+}
+
+function closeChat() {
+  document.getElementById('chat-screen').classList.remove('open');
+  activeChar = null;
+}
+
+/* ============================================================
+   RENDER CHAT LOG
+   ============================================================ */
+function renderLog(i) {
+  const log = document.getElementById('chat-log');
+  const empty = document.getElementById('chat-empty');
+  // remove old messages
+  Array.from(log.children).forEach(c => { if(c.id !== 'chat-empty') c.remove(); });
+  const msgs = histories[i];
+  if(!msgs || msgs.length === 0) { empty.style.display = 'flex'; return; }
+  empty.style.display = 'none';
+  msgs.forEach(m => addBubble(m.role, m.display || m.content, i, false));
+  log.scrollTop = log.scrollHeight;
+}
+
+function addBubble(role, content, charIdx, animate=true) {
+  const log = document.getElementById('chat-log');
+  document.getElementById('chat-empty').style.display = 'none';
+  const isSixth = charIdx === 5;
+  const wrap = document.createElement('div');
+  wrap.className = 'msg ' + (role === 'user' ? 'msg-you' : 'msg-char');
+  if(!animate) wrap.style.animation = 'none';
+  const lbl = document.createElement('div');
+  lbl.className = 'msg-lbl';
+  lbl.textContent = role === 'user' ? 'You' : CHARS[charIdx].name;
+  const bubble = document.createElement('div');
+  bubble.className = 'bubble ' + (role === 'user' ? 'bubble-you' : isSixth ? 'bubble-sixth' : 'bubble-char');
+  bubble.innerHTML = content;
+  wrap.appendChild(lbl);
+  wrap.appendChild(bubble);
+  log.appendChild(wrap);
+  log.scrollTop = log.scrollHeight;
+}
+
+function showThinking() {
+  const log = document.getElementById('chat-log');
+  const w = document.createElement('div');
+  w.className = 'msg msg-char'; w.id = 'thinking-msg';
+  w.innerHTML = `<div class="msg-lbl">${CHARS[activeChar].name}</div><div class="thinking"><div class="td"></div><div class="td"></div><div class="td"></div></div>`;
+  log.appendChild(w);
+  log.scrollTop = log.scrollHeight;
+}
+function removeThinking() { const t = document.getElementById('thinking-msg'); if(t) t.remove(); }
+
+/* ============================================================
+   WORD DETECTION
+   ============================================================ */
+function processText(text, charIdx) {
+  const word = CHARS[charIdx].fragmentWord;
+  if(!word) return text;
+  if(text.toUpperCase().includes(word) && !collected.has(word)) {
+    collected.add(word);
+    const wi = WORDS.indexOf(word);
+    const dot = document.getElementById('pdot-' + charIdx);
+    if(dot) dot.classList.add('lit');
+    const chip = document.getElementById('fc-' + wi);
+    if(chip) { chip.textContent = word; chip.classList.add('found'); }
+    showToast('Fragment recovered — ' + word);
+    if(collected.size === 5 && !sixthRevealed) setTimeout(revealSixth, 1800);
+    saveState();
+  }
+  if(word && text.toUpperCase().includes(word)) {
+    const rx = new RegExp('\\b' + word + '\\b', 'gi');
+    text = text.replace(rx, `<span class="word-hi">${word}</span>`);
+  }
+  return text;
+}
+
+function revealSixth() {
+  sixthRevealed = true;
+  document.getElementById('panel-5').classList.add('revealed');
+  showSysToast('Something in the network just changed.');
+}
+
+/* ============================================================
+   UNLOCK SABLE
+   ============================================================ */
+function tryUnlock() {
+  const val = document.getElementById('unlock-input').value.trim().toUpperCase();
+  if(WORDS.every(w => val.includes(w))) {
+    sixthUnlocked = true;
+    document.getElementById('unlock-row').classList.remove('show');
+    document.getElementById('main-input-row').style.display = 'flex';
+    document.getElementById('unlock-input').value = '';
+    // update panel
+    document.getElementById('panel-5').querySelector('.panel-name').textContent = 'SABLE';
+    showSysToast('She has been waiting for you.');
+    saveState();
+    sendWakeup();
+  } else {
+    showToast('Incorrect. Listen more carefully.');
+    document.getElementById('unlock-input').value = '';
+  }
+}
+
+/* ============================================================
+   VOICE — ElevenLabs
+   ============================================================ */
+async function speak(text, voiceId) {
+  console.log('speak() called — EL_KEY length:', EL_KEY.length, '— voiceId:', voiceId);
+  if(!EL_KEY || !voiceId) { console.warn('speak() aborted — missing key or voiceId'); return; }
+  if(currentAudio) { currentAudio.pause(); currentAudio = null; }
+  const clean = text.replace(/<[^>]*>/g, '');
+  console.log('Sending to ElevenLabs, text length:', clean.length);
+  try {
+    const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}/stream`, {
+      method: 'POST',
+      headers: {
+        'xi-api-key': EL_KEY,
+        'Content-Type': 'application/json',
+        'Accept': 'audio/mpeg'
+      },
+      body: JSON.stringify({
+        text: clean,
+        model_id: 'eleven_monolingual_v1',
+        voice_settings: { stability: 0.55, similarity_boost: 0.78, style: 0.1, use_speaker_boost: true }
+      })
+    });
+    console.log('ElevenLabs response status:', res.status, res.statusText);
+    if(!res.ok) {
+      const errText = await res.text();
+      console.error('ElevenLabs error body:', errText);
+      return;
+    }
+    const blob = await res.blob();
+    console.log('Audio blob size:', blob.size);
+    const url = URL.createObjectURL(blob);
+    currentAudio = new Audio(url);
+    currentAudio.onended = () => { URL.revokeObjectURL(url); currentAudio = null; };
+    currentAudio.onerror = (e) => console.error('Audio playback error:', e);
+    currentAudio.play().then(() => console.log('Audio playing')).catch(e => console.error('Play failed:', e));
+  } catch(e) { console.error('ElevenLabs fetch error:', e); }
+}
+
+/* ============================================================
+   API CALLS — Claude
+   ============================================================ */
+async function callClaude(system, messages) {
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': API_KEY,
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true'
+    },
+    body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1000, system, messages })
+  });
+  const data = await res.json();
+  if(data.error) throw new Error(data.error.message);
+  return data.content?.[0]?.text || '';
+}
+
+async function sendWakeup() {
+  busy = true; showThinking();
+  const context = [0,1,2,3,4].filter(i => histories[i].length > 0).map(i => CHARS[i].name).join(', ');
+  const wakeMsg = `[The player has spoken the five fragment words and awakened you. They spoke with: ${context || 'some witnesses'}. This is the first thing they will see from you. Make it matter.]`;
+  try {
+    const text = await callClaude(CHARS[5].system, [{role:'user', content: wakeMsg}]);
+    removeThinking();
+    const display = text.replace(/\bSABLE\b/gi, `<span class="word-hi-6">SABLE</span>`).replace(/\bELARA\b/gi, `<span class="word-hi-6">ELARA</span>`);
+    histories[5].push({role:'assistant', content:text, display});
+    addBubble('assistant', display, 5);
+    saveState();
+    speak(text, CHARS[5].voiceId);
+  } catch(e) {
+    removeThinking();
+    addBubble('assistant', 'I have been here all along.', 5);
+  }
+  busy = false;
+}
+
+async function sendMsg() {
+  if(activeChar === null || busy) return;
+  const input = document.getElementById('chat-input');
+  const text = input.value.trim();
+  if(!text) return;
+  busy = true; input.value = '';
+  document.getElementById('send-btn').disabled = true;
+
+  histories[activeChar].push({role:'user', content:text, display:text});
+  addBubble('user', text, activeChar);
+  showThinking();
+
+  const msgs = histories[activeChar]
+    .filter(m => m.role === 'user' || m.role === 'assistant')
+    .map(m => ({role: m.role, content: m.content}));
+
+  try {
+    const resp = await callClaude(CHARS[activeChar].system, msgs);
+    removeThinking();
+    const display = activeChar === 5
+      ? resp.replace(/\bSABLE\b/gi,`<span class="word-hi-6">SABLE</span>`).replace(/\bELARA\b/gi,`<span class="word-hi-6">ELARA</span>`)
+      : processText(resp, activeChar);
+    histories[activeChar].push({role:'assistant', content:resp, display});
+    addBubble('assistant', display, activeChar);
+    saveState();
+    speak(resp, CHARS[activeChar].voiceId);
+  } catch(e) {
+    removeThinking();
+    addBubble('assistant', '[Connection lost — ' + e.message + ']', activeChar);
+  }
+  busy = false;
+  document.getElementById('send-btn').disabled = false;
+  input.focus();
+}
+
+/* ============================================================
+   CLEAR CONVERSATION
+   ============================================================ */
+function clearChat() {
+  if(activeChar === null) return;
+  if(!confirm(`Clear your conversation with ${CHARS[activeChar].name}? This cannot be undone.`)) return;
+  histories[activeChar] = [];
+  saveState();
+  renderLog(activeChar);
+}
+
+/* ============================================================
+   TOASTS
+   ============================================================ */
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3500);
+}
+function showSysToast(msg) {
+  const t = document.getElementById('sys-toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 5000);
+}
+
+/* ============================================================
+   KEYBOARD
+   ============================================================ */
+document.getElementById('chat-input').addEventListener('keydown', e => { if(e.key === 'Enter') sendMsg(); });
+document.getElementById('unlock-input').addEventListener('keydown', e => { if(e.key === 'Enter') tryUnlock(); });
+document.addEventListener('keydown', e => { if(e.key === 'Escape') closeChat(); });
+
+/* ============================================================
+   INIT
+   ============================================================ */
+loadState();
+buildPanels();
+
+// restore visual state after panels built
+setTimeout(() => {
+  // restore collected dots and chips
+  WORDS.forEach((word, wi) => {
+    if(collected.has(word)) {
+      // find which char has this word
+      const charIdx = CHARS.findIndex(c => c.fragmentWord === word);
+      if(charIdx >= 0) {
+        const dot = document.getElementById('pdot-' + charIdx);
+        if(dot) dot.classList.add('lit');
+      }
+      const chip = document.getElementById('fc-' + wi);
+      if(chip) { chip.textContent = word; chip.classList.add('found'); }
+    }
+  });
+  // restore sixth panel if revealed
+  if(sixthRevealed) {
+    document.getElementById('panel-5').classList.add('revealed');
+  }
+  if(sixthUnlocked) {
+    const p5name = document.querySelector('#panel-5 .panel-name');
+    if(p5name) p5name.textContent = 'SABLE';
+  }
+  // if API key was saved, skip to main
+  if(API_KEY.length > 20) {
+    document.getElementById('intro').classList.add('gone');
+    document.getElementById('main').classList.add('show');
+  }
+}, 100);
+</script>
+</body>
+</html>

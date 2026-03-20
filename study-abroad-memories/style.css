@@ -54,7 +54,7 @@ body::after {
   position: absolute;
   inset: 0;
   background: url('assets/eiffel.jpeg') center center / cover no-repeat;
-  filter: brightness(0.22) saturate(0.4) sepia(0.5);
+  filter: brightness(0.18) saturate(0.4) sepia(0.5);
   animation: slowZoom 20s ease-in-out infinite alternate;
 }
 
@@ -98,18 +98,18 @@ body::after {
   font-size: 0.52rem;
   letter-spacing: 0.28em;
   text-transform: uppercase;
-  color: rgba(240,232,213,0.28);
+  color: rgba(240,232,213,0.55);
   line-height: 2.3;
 }
 
-.boot-tag b { color: rgba(240,232,213,0.5); font-weight: 400; }
+.boot-tag b { color: rgba(240,232,213,0.85); font-weight: 400; }
 
 .boot-status {
   text-align: right;
   font-size: 0.5rem;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: rgba(240,232,213,0.22);
+  color: rgba(240,232,213,0.5);
   line-height: 2.3;
 }
 
@@ -134,7 +134,7 @@ body::after {
   font-size: 0.55rem;
   letter-spacing: 0.42em;
   text-transform: uppercase;
-  color: rgba(240,232,213,0.3);
+  color: rgba(240,232,213,0.65);
   margin-bottom: 2rem;
   opacity: 0;
   animation: fadeUp 1s ease 0.7s forwards;
@@ -165,27 +165,27 @@ body::after {
   font-size: 0.52rem;
   letter-spacing: 0.25em;
   text-transform: uppercase;
-  color: rgba(240,232,213,0.25);
+  color: rgba(240,232,213,0.55);
   line-height: 2.4;
   opacity: 0;
   animation: fadeUp 0.8s ease 1.7s forwards;
 }
 
-.boot-dossier-meta span { color: rgba(240,232,213,0.45); }
+.boot-dossier-meta span { color: rgba(240,232,213,0.85); }
 
 .boot-recipient {
   margin-top: 1.8rem;
-  border: 1px solid rgba(240,232,213,0.1);
+  border: 1px solid rgba(240,232,213,0.22);
   padding: 1.2rem 2.5rem;
   font-size: 0.52rem;
   letter-spacing: 0.2em;
   line-height: 2.2;
-  color: rgba(240,232,213,0.22);
+  color: rgba(240,232,213,0.5);
   opacity: 0;
   animation: fadeUp 0.8s ease 2s forwards;
 }
 
-.boot-recipient strong { color: rgba(240,232,213,0.45); font-weight: 400; }
+.boot-recipient strong { color: rgba(240,232,213,0.85); font-weight: 400; }
 
 .boot-recipient em {
   color: var(--gold);
@@ -207,7 +207,7 @@ body::after {
   font-size: 0.5rem;
   letter-spacing: 0.32em;
   text-transform: uppercase;
-  color: rgba(240,232,213,0.18);
+  color: rgba(240,232,213,0.45);
 }
 
 .enter-btn {
@@ -240,7 +240,7 @@ body::after {
 .boot-coords {
   font-size: 0.46rem;
   letter-spacing: 0.2em;
-  color: rgba(240,232,213,0.13);
+  color: rgba(240,232,213,0.35);
 }
 
 /* Glitch */
@@ -700,13 +700,15 @@ h1 em { font-style: italic; color: var(--gold); }
 }
 
 @media (max-width: 768px) {
-  .photo-stage { height: 65vw; position: relative; }
+  .photo-stage { height: 75vw; min-height: 260px; position: relative; }
 }
 
 .photo-stage img {
   width: 100%; height: 100%;
   object-fit: contain;
   display: block;
+  background: #0e0b07;
+  background-repeat: no-repeat;
   filter: sepia(10%) contrast(1.06) saturate(0.9);
   transition: opacity 0.45s ease, transform 0.5s ease;
 }
@@ -838,7 +840,7 @@ h1 em { font-style: italic; color: var(--gold); }
   height: 2px;
   background: rgba(22,17,12,0.08);
   margin-bottom: 1.2rem;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .progress-fill {
@@ -1147,4 +1149,60 @@ footer {
 .final-note-close:hover {
   color: rgba(240,232,213,0.6);
   border-color: rgba(240,232,213,0.3);
+}
+/* ══ MOBILE RESPONSIVE — must be at bottom to override desktop rules ══ */
+@media (max-width: 768px) {
+
+  /* Boot screen */
+  .boot-ui { padding: 1.5rem 1.2rem; }
+  .boot-top { flex-direction: column; gap: 0.5rem; }
+  .boot-status { text-align: left; }
+  .boot-recipient { padding: 1rem 1.2rem; }
+
+  /* Dossier page */
+  .dossier-wrap { padding: 0 1rem; }
+  .dossier-page { padding: 2.5rem 0 4rem; }
+
+  .doc-header {
+    flex-direction: column;
+    gap: 0.8rem;
+    align-items: flex-start;
+    padding: 1rem 1.2rem;
+  }
+
+  .doc-body { padding: 1.5rem 1.2rem 2rem; }
+
+  .subject-block {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .subject-photo-wrap { width: 100%; }
+
+  .subject-photo {
+    width: 100%;
+    height: 240px;
+    object-fit: cover;
+    object-position: center top;
+  }
+
+  .field-value.large { font-size: 1.3rem; }
+
+  .fields-grid { grid-template-columns: 1fr 1fr; gap: 0.8rem 1rem; }
+
+  /* Archive header */
+  header { padding: 2rem 1.5rem; }
+  .header-top { flex-direction: column; gap: 0.3rem; }
+  .header-bottom { flex-direction: column; gap: 1rem; align-items: flex-start; }
+  .header-stats { gap: 1.5rem; flex-wrap: wrap; }
+
+  /* Viewer */
+  .viewer-section { grid-template-columns: 1fr; }
+  .photo-stage { height: 75vw; min-height: 260px; position: relative; }
+  .sidebar { height: auto; border-left: none; border-top: 2px solid var(--ink); position: relative; }
+
+  /* Footer */
+  footer { padding: 3rem 1.5rem 2rem; }
+  .footer-bottom { flex-direction: column; gap: 0.5rem; }
 }
