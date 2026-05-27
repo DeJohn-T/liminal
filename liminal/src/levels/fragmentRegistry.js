@@ -2,6 +2,7 @@
 import { buildHallway, buildHallwayCorrupted, buildHallwayImpossible } from './buildHallway';
 import { buildMall, buildMallCorrupted, buildMallImpossible } from './buildMall';
 import { buildStreet, buildStreetCorrupted, buildStreetImpossible } from './buildStreet';
+import { buildNurseryHall, buildNurseryHallCorrupted, buildNurseryHallImpossible } from './buildNurseryHall';
 
 export const FRAGMENTS = {
   hallway: {
@@ -67,6 +68,27 @@ export const FRAGMENTS = {
       normal:     buildStreet,
       corrupted:  buildStreetCorrupted,
       impossible: buildStreetImpossible,
+    },
+  },
+
+  nurseryHall: {
+    id: 'nurseryHall',
+    name: 'NurseryHall',
+    startPosition: [0, 1.7, 1],
+    fog: { color: '#e8d0d8', near: 4, far: 16 },
+    background: '#e0c8d0',
+    ambient: { color: '#ffe0e8', intensity: 0.08 },
+    lights: [
+      { type: 'point', color: '#fff5e0', intensity: 3.5, distance: 10, position: [0, 2.0, -10], flicker: true,  flickerSpeed: 0.22, shadows: true  },
+      { type: 'point', color: '#fff5e0', intensity: 3.0, distance: 10, position: [0, 2.0, -35], flicker: false, shadows: false },
+    ],
+    sanityDrain: 1.8,
+    vignetteBase: 0.42,
+    transition: { position: [0, 1.7, -55], radius: 3.5 },
+    variants: {
+      normal:     buildNurseryHall,
+      corrupted:  buildNurseryHallCorrupted,
+      impossible: buildNurseryHallImpossible,
     },
   },
 };
