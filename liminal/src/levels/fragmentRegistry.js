@@ -6,6 +6,7 @@ import { buildNurseryHall, buildNurseryHallCorrupted, buildNurseryHallImpossible
 import { buildWetKitchen, buildWetKitchenCorrupted, buildWetKitchenImpossible } from './buildWetKitchen';
 import { buildRedBedroom, buildRedBedroomCorrupted, buildRedBedroomImpossible } from './buildRedBedroom';
 import { buildEndlessStairs, buildEndlessStairsCorrupted, buildEndlessStairsImpossible } from './buildEndlessStairs';
+import { buildConcreteTunnel, buildConcreteTunnelCorrupted, buildConcreteTunnelImpossible } from './buildConcreteTunnel';
 
 export const FRAGMENTS = {
   hallway: {
@@ -156,6 +157,29 @@ export const FRAGMENTS = {
       normal:     buildEndlessStairs,
       corrupted:  buildEndlessStairsCorrupted,
       impossible: buildEndlessStairsImpossible,
+    },
+  },
+
+  concreteTunnel: {
+    id: 'concreteTunnel',
+    name: 'ConcreteTunnel',
+    startPosition: [0, 1.7, 1],
+    fog: { color: '#101010', near: 3, far: 18 },
+    background: '#080808',
+    ambient: { color: '#180800', intensity: 0.03 },
+    lights: [
+      { type: 'point', color: '#ff6600', intensity: 2.0, distance: 10, position: [0, 2.5, -8],  flicker: true,  flickerSpeed: 0.25, shadows: true  },
+      { type: 'point', color: '#ff6600', intensity: 1.8, distance: 10, position: [0, 2.5, -20], flicker: false, shadows: false },
+      { type: 'point', color: '#ff6600', intensity: 1.5, distance: 10, position: [0, 2.5, -33], flicker: true,  flickerSpeed: 0.4,  shadows: false },
+      { type: 'point', color: '#ff6600', intensity: 1.5, distance: 10, position: [0, 2.5, -46], flicker: true,  flickerSpeed: 0.12, shadows: false },
+    ],
+    sanityDrain: 1.6,
+    vignetteBase: 0.45,
+    transition: { position: [0, 1.7, -51], radius: 3.5 },
+    variants: {
+      normal:     buildConcreteTunnel,
+      corrupted:  buildConcreteTunnelCorrupted,
+      impossible: buildConcreteTunnelImpossible,
     },
   },
 };
