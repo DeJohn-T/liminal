@@ -72,8 +72,7 @@ export function buildNurseryHall() {
 
   // Small door at z=-30, left wall (height 1.4 — too small)
   const frame = mesh(new THREE.BoxGeometry(0.12, 1.55, 0.85), doorFrameMat, [-W / 2 + 0.06, 0.775, -30]);
-  add(objects, frame);
-  collidables.push(frame);
+  add(objects, frame); // visual only — wall handles collision
   add(objects, mesh(new THREE.BoxGeometry(0.1, 1.4, 0.7), doorMat, [-W / 2 + 0.05, 0.7, -30]));
 
   return { objects, collidables };

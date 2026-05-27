@@ -67,7 +67,7 @@ export function buildHotelCorridor() {
     const x    = side * (W / 2 - 0.06);
 
     const frame = mesh(new THREE.BoxGeometry(0.12, 2.1, 1.1), doorFrameMat, [x, 1.05, z]);
-    objects.push(frame); collidables.push(frame);
+    objects.push(frame); // visual only — wall handles collision
 
     if (i === 8) {
       // Ajar door at i=8 (z=-36) with red light strip in gap
