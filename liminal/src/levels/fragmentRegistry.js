@@ -7,6 +7,7 @@ import { buildWetKitchen, buildWetKitchenCorrupted, buildWetKitchenImpossible } 
 import { buildRedBedroom, buildRedBedroomCorrupted, buildRedBedroomImpossible } from './buildRedBedroom';
 import { buildEndlessStairs, buildEndlessStairsCorrupted, buildEndlessStairsImpossible } from './buildEndlessStairs';
 import { buildConcreteTunnel, buildConcreteTunnelCorrupted, buildConcreteTunnelImpossible } from './buildConcreteTunnel';
+import { buildHotelCorridor, buildHotelCorridorCorrupted, buildHotelCorridorImpossible } from './buildHotelCorridor';
 
 export const FRAGMENTS = {
   hallway: {
@@ -180,6 +181,31 @@ export const FRAGMENTS = {
       normal:     buildConcreteTunnel,
       corrupted:  buildConcreteTunnelCorrupted,
       impossible: buildConcreteTunnelImpossible,
+    },
+  },
+
+  hotelCorridor: {
+    id: 'hotelCorridor',
+    name: 'HotelCorridor',
+    startPosition: [0, 1.7, 1],
+    fog: { color: '#2a2018', near: 6, far: 22 },
+    background: '#201810',
+    ambient: { color: '#604828', intensity: 0.06 },
+    lights: [
+      { type: 'point', color: '#ffc060', intensity: 1.8, distance: 8, position: [-2.2, 2.1, -8],  flicker: false, shadows: true  },
+      { type: 'point', color: '#ffc060', intensity: 1.5, distance: 8, position: [2.2,  2.1, -16], flicker: false, shadows: false },
+      { type: 'point', color: '#ffc060', intensity: 1.8, distance: 8, position: [-2.2, 2.1, -28], flicker: false, shadows: false },
+      { type: 'point', color: '#ffc060', intensity: 1.5, distance: 8, position: [2.2,  2.1, -40], flicker: true,  flickerSpeed: 0.05, shadows: false },
+      { type: 'point', color: '#ffc060', intensity: 1.2, distance: 8, position: [-2.2, 2.1, -52], flicker: false, shadows: false },
+      { type: 'point', color: '#ffc060', intensity: 1.0, distance: 8, position: [2.2,  2.1, -64], flicker: false, shadows: false },
+    ],
+    sanityDrain: 1.0,
+    vignetteBase: 0.35,
+    transition: { position: [0, 1.7, -66], radius: 3.5 },
+    variants: {
+      normal:     buildHotelCorridor,
+      corrupted:  buildHotelCorridorCorrupted,
+      impossible: buildHotelCorridorImpossible,
     },
   },
 };
