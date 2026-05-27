@@ -71,7 +71,7 @@ export class Game {
     // Check for level transition
     if (!this._transitioning) {
       const next = this.levels.checkTransition(this.camera.position);
-      if (next !== null) this._startTransition(next);
+      if (next !== null) this._startTransition();
     } else {
       this._tickTransition(delta);
     }
