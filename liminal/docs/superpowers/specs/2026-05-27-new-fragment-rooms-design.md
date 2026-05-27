@@ -176,7 +176,7 @@ Each fragment follows the existing pattern:
 **File:** `src/levels/buildEndlessStairs.js`
 **Registry key:** `endlessStairs`
 
-**Dimensions:** W:5, H:30 (void above fog), L:20 (footprint), stairs climb to y≈24
+**Dimensions:** W:5, H:30 (void above fog), L:60 (footprint)
 
 **Materials:**
 - Steps/floor/walls: `#2e2e2e` (rough concrete), roughness 1.0
@@ -187,17 +187,20 @@ Each fragment follows the existing pattern:
 - Door frame: `#3a3230`, roughness 0.9
 
 **Geometry:**
-- Ground floor (landing): W×0.1×L box at y=0
-- Left wall and right wall full height
-- Back wall at z=2
-- 80 steps: each BoxGeometry(W-0.2, 0.28, 0.75), y = 0.14 + i×0.28, z = -1.5 - i×0.7
-- Each step spans W-0.2 (nearly full width, gap for handrail)
-- Landings: 3 wider platforms at step 20, 40, 60 (wider z extent)
-- Handrail: thin boxes (0.08×0.08) running alongside steps on right side
-- Emergency strip lights: thin emissive boxes (W×0.04×0.04) on left wall every 5 steps at ankle height
-- Graffiti: 0.6×0.4×0.04 box on left wall at step 15 height
-- Door frame at step 35 height on right wall (frame only, no door, opens to wall)
-- Collidables: walls, back wall, each step (player walks up them via collision)
+
+> **Note:** The collision system is horizontal (x/z) only — the player stays at y=1.7 throughout. Stairs are visual geometry built INTO the walls on both sides, like looking through the center of a stairwell while the stairs rise alongside you. The player walks the flat floor corridor; the stairs climb above them into fog.
+
+- Floor (flat): W×0.1×L at y=0
+- Left wall, right wall (full height H=30), back wall, no ceiling (void)
+- Stairs LEFT side: 50 steps built into/against left wall — each step box (1.2×0.28×0.75), x=-W/2+0.6, y=0.14+i×0.28, z=-1+i×-1.1
+- Stairs RIGHT side: mirrored 50 steps on right wall
+- Landings: 3 wider slab boxes crossing full width at step 15, 30, 45 heights (y≈4.2, 8.4, 12.6), z matching step positions
+- Handrail left: thin box (0.06×0.06×L×0.8) angled along stair rise on left side
+- Handrail right: mirrored
+- Emergency strip lights: thin emissive boxes on both walls at y=0.15, every 6 units in z
+- Graffiti patch: 0.6×0.4×0.04 on left wall at y=1.4, z=-22
+- Door frame: at z=-35, right wall, height 2.1 (frame only, no door)
+- Collidables: walls, back wall (stairs are NOT collidable — visual only)
 
 **Config:**
 ```js
@@ -214,11 +217,9 @@ Each fragment follows the existing pattern:
   ],
   sanityDrain: 1.2,
   vignetteBase: 0.38,
-  transition: { position: [0, 1.7, -16], radius: 3.5 },
+  transition: { position: [0, 1.7, -55], radius: 3.5 },
 }
 ```
-
-> **Note:** The transition trigger is on the ground floor at z=-16 (back of the footprint). The player never reaches the top — they loop out before that.
 
 ---
 
