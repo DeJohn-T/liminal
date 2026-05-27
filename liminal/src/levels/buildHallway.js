@@ -55,10 +55,9 @@ export function buildHallway() {
   [-9, -20, -31].forEach(z => {
     [-1, 1].forEach(side => {
       const x = side * (W / 2 - 0.07);
-      // Frame
+      // Frame (visual only — not collidable, wall handles boundary)
       const frame = mesh(new THREE.BoxGeometry(0.12, 2.3, 1.1), doorFrameMat, [x, 1.15, z]);
       add(objects, frame);
-      collidables.push(frame);
       // Door panel
       const door = mesh(new THREE.BoxGeometry(0.1, 2.1, 0.9), doorMat, [x, 1.05, z]);
       add(objects, door);
