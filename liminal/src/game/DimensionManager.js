@@ -108,6 +108,7 @@ export class DimensionManager {
         if (Array.isArray(obj.material)) obj.material.forEach(m => m.dispose());
         else obj.material.dispose();
       }
+      if (obj.shadow?.map) obj.shadow.map.dispose();
     });
     this._objects      = [];
     this._collidables  = [];
