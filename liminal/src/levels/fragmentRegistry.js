@@ -3,6 +3,7 @@ import { buildHallway, buildHallwayCorrupted, buildHallwayImpossible } from './b
 import { buildMall, buildMallCorrupted, buildMallImpossible } from './buildMall';
 import { buildStreet, buildStreetCorrupted, buildStreetImpossible } from './buildStreet';
 import { buildNurseryHall, buildNurseryHallCorrupted, buildNurseryHallImpossible } from './buildNurseryHall';
+import { buildWetKitchen, buildWetKitchenCorrupted, buildWetKitchenImpossible } from './buildWetKitchen';
 
 export const FRAGMENTS = {
   hallway: {
@@ -89,6 +90,28 @@ export const FRAGMENTS = {
       normal:     buildNurseryHall,
       corrupted:  buildNurseryHallCorrupted,
       impossible: buildNurseryHallImpossible,
+    },
+  },
+
+  wetKitchen: {
+    id: 'wetKitchen',
+    name: 'WetKitchen',
+    startPosition: [0, 1.7, 1],
+    fog: { color: '#0c120c', near: 5, far: 25 },
+    background: '#080e08',
+    ambient: { color: '#304030', intensity: 0.05 },
+    lights: [
+      { type: 'point', color: '#b0ffb8', intensity: 2.5, distance: 18, position: [0,  3.0, -10], flicker: false, shadows: true  },
+      { type: 'point', color: '#b0ffb8', intensity: 2.0, distance: 15, position: [-3, 3.0, -28], flicker: true,  flickerSpeed: 0.15, shadows: false },
+      { type: 'point', color: '#b0ffb8', intensity: 1.5, distance: 12, position: [3,  3.0, -40], flicker: true,  flickerSpeed: 0.08, shadows: false },
+    ],
+    sanityDrain: 1.5,
+    vignetteBase: 0.40,
+    transition: { position: [0, 1.7, -44], radius: 3.5 },
+    variants: {
+      normal:     buildWetKitchen,
+      corrupted:  buildWetKitchenCorrupted,
+      impossible: buildWetKitchenImpossible,
     },
   },
 };
